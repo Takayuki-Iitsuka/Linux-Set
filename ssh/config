@@ -1,1 +1,55 @@
+VisualHostKey=yes
+
+Host localhost
+  HostName localhost
+  User taka
+  Port 7777
+  VisualHostKey=yes
+
+Host Ubuntu_Server_22.10(127.0.0.1)
+  HostName 127.0.0.1
+  Port 3333
+  User taka
+  VisualHostKey=yes
+
+Host Ubuntu_Server_22.04.1_LTS(127.0.0.1)
+  HostName 127.0.0.1
+  Port 2222
+  User taka
+  VisualHostKey=yes
+
+Host U22-10
+  HostName 127.0.0.1
+  Port 3333
+  User taka
+  IdentityFile ~/.ssh/id_ed25519
+  VisualHostKey=yes
+
+Host U22-04
+  HostName 127.0.0.1
+  Port 2222
+  User taka
+  IdentityFile ~/.ssh/id_ed25519
+  VisualHostKey=yes
+
+Host U22-10_4096
+  HostName 127.0.0.1
+  Port 3333
+  User taka
+  IdentityFile ~/.ssh/id_rsa_22-10_4096
+  VisualHostKey=yes
+
+Host U22-04_4096
+  HostName 127.0.0.1
+  Port 2222
+  User taka
+  IdentityFile ~/.ssh/id_rsa_22-04_4096
+  VisualHostKey=yes
+
+Host WSL2-U22-10
+  HostName 172.20.118.247
+  Port 22
+  User etsuka
+  IdentityFile ~/.ssh/id_ed25519
+  VisualHostKey=yes
 
