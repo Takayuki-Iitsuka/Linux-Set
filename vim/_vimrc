@@ -1,0 +1,151 @@
+
+call plug#begin()
+
+" Using a non-default branch
+"Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
+" Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
+"Plug 'fatih/vim-go', { 'tag': '*' }
+" Unmanaged plugin (manually installed and updated)
+Plug '~/my-prototype-plugin'
+" Initialize plugin system
+" - Automatically executes `filetype plugin indent on` and `syntax enable`.
+
+" ddc.vim本体
+Plug 'Shougo/ddc.vim'
+" DenoでVimプラグインを開発するためのプラグイン
+Plug 'vim-denops/denops.vim'
+" ポップアップウィンドウを表示するプラグイン
+Plug 'Shougo/pum.vim'
+" カーソル周辺の既出単語を補完するsource
+Plug 'Shougo/ddc-around'
+" ファイル名を補完するsource
+Plug 'LumaKernel/ddc-file'
+" 入力中の単語を補完の対象にするfilter
+Plug 'Shougo/ddc-matcher_head'
+" 補完候補を適切にソートするfilter
+Plug 'Shougo/ddc-sorter_rank'
+" 補完候補の重複を防ぐためのfilter
+Plug 'Shougo/ddc-converter_remove_overlap'
+
+Plug 'rust-lang/rust.vim'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'dense-analysis/ale'
+
+call plug#end()
+
+colorscheme molokai
+set t_Co=256
+
+set number
+set relativenumber
+set title
+set belloff=all
+set laststatus=2
+set ruler
+syntax on
+let mapleader = "\<Space>"
+set fenc=utf-8
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set autoindent smartindent
+set cindent
+let &t_ti.="\e[3 q"
+let &t_SI.="\e[5 q"
+let &t_EI.="\e[3 q"
+let &t_te.="\e[3 q"
+vnoremap < <gv
+vnoremap > >gv
+noremap x "_x
+noremap X "_X
+noremap c "_c
+noremap C "_C
+noremap s "_s
+noremap S "_S
+xnoremap <expr> p 'pgv"'.v:register.'y`>'
+set ignorecase
+set smartcase
+set hlsearch
+nnoremap <Leader>q :nohlsearch<CR>
+set incsearch
+set history=100
+set clipboard=unnamed
+set noswapfile
+set autoread
+set showcmd
+set ambiwidth=double
+set autochdir
+
+" 使いたいsourceを指定する
+call ddc#custom#patch_global('sources', ['around'])
+
+filetype plugin indent on
+
+" 保存時に自動でrustfmt
+let g:rustfmt_autosave = 1
+let g:rustfmt_emit_files = 1
+let g:rustfmt_fail_silently = 0
+
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+call plug#('Shougo/ddc.vim')
+call plug#('vim-denops/denops.vim')
+call plug#('Shougo/pum.vim')
+call plug#('Shougo/ddc-around')
+call plug#('LumaKernel/ddc-file')
+call plug#('Shougo/ddc-matcher_head')
+call plug#('Shougo/ddc-sorter_rank')
+call plug#('Shougo/ddc-converter_remove_overlap')
+call plug#('prabirshrestha/vim-lsp')
+call plug#('mattn/vim-lsp-settings')
+
+call ddc#custom#patch_global('completionMenu', 'pum.vim')
+call ddc#custom#patch_global('sources', [
+ \ 'around',
+ \ 'vim-lsp',
+ \ 'file'
+ \ ])
+call ddc#custom#patch_global('sourceOptions', {
+ \ '_': {
+ \   'matchers': ['matcher_head'],
+ \   'sorters': ['sorter_rank'],
+ \   'converters': ['converter_remove_overlap'],
+ \ },
+ \ 'around': {'mark': 'Around'},
+ \ 'vim-lsp': {
+ \   'mark': 'LSP', 
+ \   'matchers': ['matcher_head'],
+ \   'forceCompletionPattern': '\.|:|->|"\w+/*'
+ \ },
+ \ 'file': {
+ \   'mark': 'file',
+ \   'isVolatile': v:true, 
+ \   'forceCompletionPattern': '\S/\S*'
+ \ }})
+
+" ddc.vimの機能を有効にする
+call ddc#enable()
+
+inoremap <Tab> <Cmd>call pum#map#insert_relative(+1)<CR>
+inoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
